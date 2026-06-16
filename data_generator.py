@@ -86,7 +86,7 @@ def generate_site_enrollment(site_profile: pd.DataFrame,
     Introduces realistic anomalies for testing Layer 2 detection.
     """
     records = []
-    base_date = datetime(2025, 6, 1)
+    base_date = datetime.now() - timedelta(days=7)
 
     for _, row in site_profile.iterrows():
         study = next(s for s in STUDIES if s["study_id"] == row["study_id"])
