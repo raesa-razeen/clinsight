@@ -1,0 +1,6 @@
+study_id,drug,target_enrollment,start_date,planned_end_date,status,phase
+CLN-001-2025,Compound-A,120,2025-01-01,2027-01-01,ACTIVE,Phase II
+CLN-002-2025,Compound-B,80,2025-04-01,2027-04-01,ACTIVE,Phase II
+CLN-003-2025,Compound-C,60,2025-06-30,2027-06-30,ACTIVE,Phase III
+CLN-004-2025,Compound-D,100,2025-09-28,2027-09-28,ACTIVE,Phase II
+CLN-005-2025,Compound-E,40,2025-12-27,2027-12-27,ACTIVE,Phase II
