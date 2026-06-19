@@ -1,4 +1,4 @@
-# CLINSIGHT — Clinical Supply Chain Intelligence System
+# CLINSIGHT - Clinical Supply Chain Intelligence System
 
 > Automated anomaly detection · Monte Carlo simulation · LLM-powered intelligence briefings  
 > Built for clinical trial supply chain operations
@@ -34,7 +34,6 @@ Clinical Supply Data (CTMS · IRT · Supply Systems)
 
 |
 
-v
 
 LAYER 1 — Data Contract Validator
 
@@ -46,7 +45,6 @@ CLEAR / WARNING / QUARANTINED
 
 |
 
-+---------+---------+
 
 |                   |
 
@@ -56,7 +54,7 @@ Alert raised           Proceed to Layer 2
 
 |
 
-v
+
 
 LAYER 2 — Business Anomaly Detector
 
@@ -70,7 +68,7 @@ Drug expiry risk detection
 
 |
 
-v
+
 
 LAYER 3 — Monte Carlo Simulation
 
@@ -82,7 +80,7 @@ Stockout days · Patients at risk · Units wasted
 
 |
 
-v
+
 
 LAYER 4 — LLM Intelligence Briefing
 
@@ -96,7 +94,7 @@ Urgency classification: IMMEDIATE / THIS WEEK / MONITOR
 
 |
 
-v
+
 
 Streamlit Dashboard + PDF Report Download
 
@@ -110,7 +108,7 @@ Streamlit Dashboard + PDF Report Download
 
 **Monte Carlo over point estimates** - clinical supply chain planning under uncertainty cannot rely on single-number forecasts. P10/P50/P90 projections give planners a range of scenarios to plan against, not a false sense of precision.
 
-**LLM for explanation not for logic** - the core detection and simulation logic is deterministic Python. The LLM is used only for the final explanation step — converting structured findings into plain English briefings. This keeps the system reliable and auditable.
+**LLM for explanation not for logic** - the core detection and simulation logic is deterministic Python. The LLM is used only for the final explanation step - converting structured findings into plain English briefings. This keeps the system reliable and auditable.
 
 ---
 
@@ -133,7 +131,7 @@ Streamlit Dashboard + PDF Report Download
 ---
 
 ## Monte Carlo Results - Example Output
-CLN-004-2025 — INVENTORY SHORTAGE - Risk: CRITICAL
+CLN-004-2025 - INVENTORY SHORTAGE - Risk: CRITICAL
 P10 Best Case    : 11.2 days of supply remaining
 
 P50 Most Likely  : 12.9 days of supply remaining
