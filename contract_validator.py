@@ -172,7 +172,84 @@ def validate_geocoding_completeness(study_id: str,
     else:
         result.add_pass()
 
+def validate_irt_site_id_match(study_id: str,
+                                site_profile: pd.DataFrame,
+                                irt_dispensing: pd.DataFrame,
+                                result: StudyValidationResult):
+    """
+    Rule 7 - Site IDs in IRT must match Site IDs in Site Profile.
+    Real world issue: IRT and CTMS sometimes use different site ID systems
+    causing zero overlap and blank dashboards.
+    """
+    profile_sites = set(
+        site_profile[site_profile["study_id"] == study_id]["site_id"]
+    )
+    irt_sites = set(
+        irt_dispensing[irt_dispensing["study_id"] == study_id]["site_id"]
+    )
 
+    if not profile_sites or not irt_sites:
+        result.add_pass()
+        return
+
+    matching = profile_sites.intersection(irt_sites)
+    irt_only = irt_sites - profile_sites
+    profile_only = profile_sites - irt_sites
+
+    overlap_pct = (len(matching) / max(len(irt_sites), len(profile_sites))) * 100
+
+    if overlap_pct == 0:
+        result.add_issue(ValidationIssue(
+            rule="IRT_SITE_ID_MISMATCH",
+            severity="CRITICAL",
+            description=(
+                f"Zero overlap between IRT and Site Profile site IDs for {study_id}. "
+                f"IRT sent {len(irt_sites)} site IDs: {irt_sites}. "
+                f"Site Profile has {len(profile_sites)} site IDs: {profile_sites}. "
+                f"Dashboard will show blank inventory for all sites."
+            ),
+            affected=f"{study_id} - all sites affected"
+        ))
+    elif overlap_pct < 50:
+        result.add_issue(ValidationIssue(
+            rule="IRT_SITE_ID_PARTIAL_MISMATCH",
+            severity="HIGH",
+            description=(
+                f"Partial site ID mismatch for {study_id}. "
+                f"Only {len(matching)} of {len(irt_sites)} IRT sites match Site Profile. "
+                f"IRT only (unmatched): {irt_only}. "
+                f"Profile only (no IRT data): {profile_only}."
+            ),
+            affected=f"{study_id} - {len(irt_only)} unmatched sites"
+        ))
+    else:
+        result.add_pass()
+
+
+def validate_depot_inventory_exists(study_id: str,
+                                     inventory: pd.DataFrame,
+                                     result: StudyValidationResult):
+    """
+    Rule 8 - Every active study must have depot inventory records.
+    Real world issue: Source system sometimes fails to send depot
+    inventory data resulting in blank dashboard displays.
+    """
+    study_inv = inventory[inventory["study_id"] == study_id]
+
+    if study_inv.empty:
+        result.add_issue(ValidationIssue(
+            rule="DEPOT_INVENTORY_MISSING",
+            severity="CRITICAL",
+            description=(
+                f"Zero depot inventory records found for {study_id}. "
+                f"Depot Inventory table has no data for this study. "
+                f"Dashboard will show blank depot inventory. "
+                f"Source system may not have sent depot data."
+            ),
+            affected=f"{study_id} - all depots"
+        ))
+    else:
+        result.add_pass()
 # ── MAIN VALIDATOR ─────────────────────────────────────────────
 
 def validate_all_studies(study_config:    pd.DataFrame,
@@ -197,6 +274,8 @@ def validate_all_studies(study_config:    pd.DataFrame,
         validate_inventory_exists(study_id, inventory, result)
         validate_data_freshness(study_id, site_enrollment, result)
         validate_geocoding_completeness(study_id, site_profile, result)
+        validate_irt_site_id_match(study_id, site_profile, irt_dispensing, result)
+        validate_depot_inventory_exists(study_id, inventory, result)
 
         results.append(result)
 
